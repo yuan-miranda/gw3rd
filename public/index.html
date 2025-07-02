@@ -41,6 +41,18 @@
             outline: none;
         }
 
+        select {
+            font-size: 1rem;
+            border: none;
+            border-radius: 0.25rem;
+            background-color: white;
+        }
+
+        select:focus {
+            border-color: #4caf50;
+            outline: none;
+        }
+
         .output {
             background-color: #f9f9f9;
             padding: 0.75rem;
@@ -72,7 +84,7 @@
             color: white;
             padding: 0.75rem 1rem;
             border-radius: 0.25rem;
-            font-size: 0.875rem;
+            font-size: 1rem;
             font-weight: bold;
             box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.2);
             opacity: 0;
@@ -85,6 +97,12 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        .input-mode-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
     </style>
 </head>
 
@@ -94,7 +112,14 @@
         <p>Too lazy to type like a g-word jejemon? Then use this! When there's a vowel (a, e, i, o, u), it will be
             transformed to vowel + "g" + vowel.</p>
 
-        <label for="inputText">Input:</label>
+        <div class="input-mode-row">
+            <label for="inputText">Input:</label>
+            <select id="modeSelect" onchange="transformText()">
+                <option value="normal-to-jeje">Normal to Jejemon</option>
+                <option value="jeje-to-normal">Jejemon to Normal</option>
+            </select>
+        </div>
+
         <input type="text" id="inputText" placeholder="Type your text here..." oninput="transformText()"
             onkeypress="handleKeyPress(event)" />
 
@@ -113,14 +138,24 @@
     <script>
         function transformText() {
             const input = document.getElementById("inputText").value;
+            const mode = document.getElementById("modeSelect").value;
             const output = document.getElementById("output");
 
-            const transformed = input.replace(/[aeiouAEIOU]/g, vowel => {
-                const lowerVowel = vowel.toLowerCase();
-                return vowel === vowel.toUpperCase() ?
-                    `${vowel}G${vowel}` :
-                    `${lowerVowel}g${lowerVowel}`;
-            });
+            let transformed;
+
+            if (mode === "normal-to-jeje") {
+                // vowel becomes vowel+g+vowel
+                transformed = input.replace(/[aeiouAEIOU]/g, vowel => {
+                    const lowerVowel = vowel.toLowerCase();
+                    return vowel === vowel.toUpperCase() ?
+                        `${vowel}G${vowel}` :
+                        `${lowerVowel}g${lowerVowel}`;
+                });
+            } else {
+                // vowel+g+vowel becomes vowel
+                transformed = input.replace(/([aeiouAEIOU])g\1/gi, (match, vowel) => vowel);
+            }
+
             output.textContent = transformed || "Transformed text will appear here...";
         }
 
