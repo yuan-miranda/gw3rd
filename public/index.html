@@ -91,7 +91,8 @@
 <body>
     <div class="container">
         <h1>GW<sup>3</sup>RD</h1>
-        <p>Too lazy to type like a g-word jejemon? Then use this! When there's a vowel (a, e, i, o, u), it will be transformed to "g" + vowel.</p>
+        <p>Too lazy to type like a g-word jejemon? Then use this! When there's a vowel (a, e, i, o, u), it will be
+            transformed to vowel + "g" + vowel.</p>
 
         <label for="inputText">Input:</label>
         <input type="text" id="inputText" placeholder="Type your text here..." oninput="transformText()"
@@ -114,7 +115,12 @@
             const input = document.getElementById("inputText").value;
             const output = document.getElementById("output");
 
-            const transformed = input.replace(/[aeiouAEIOU]/g, vowel => `g${vowel}`);
+            const transformed = input.replace(/[aeiouAEIOU]/g, vowel => {
+                const lowerVowel = vowel.toLowerCase();
+                return vowel === vowel.toUpperCase() ?
+                    `${vowel}G${vowel}` :
+                    `${lowerVowel}g${lowerVowel}`;
+            });
             output.textContent = transformed || "Transformed text will appear here...";
         }
 
