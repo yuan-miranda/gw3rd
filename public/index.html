@@ -1,11 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vowel Transformer</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            max-width: 50rem;
+            margin: 3rem auto;
+            padding: 1rem;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 1rem;
+            border: 0.125rem solid #ddd;
+            border-radius: 0.25rem;
+            margin: 0.5rem 0;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus {
+            border-color: #4caf50;
+            outline: none;
+        }
+
+        .output {
+            background-color: #f9f9f9;
+            padding: 0.75rem;
+            border-radius: 0.25rem;
+            margin: 0.5rem 0;
+            min-height: 1rem;
+            border-left: 0.25rem solid #4caf50;
+        }
+
+        label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .output {
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .output:hover {
+            background-color: #e8f5e8;
+        }
+
+        .copied-notification {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background-color: #4caf50;
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 0.25rem;
+            font-size: 0.875rem;
+            font-weight: bold;
+            box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transform: translateY(-1rem);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .copied-notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
 </head>
+
 <body>
-    Hello, World!
+    <div class="container">
+        <h1>GW<sup>3</sup>RD</h1>
+        <p>Too lazy to type like a g-word jejemon? Then use this! When there's a vowel (a, e, i, o, u), it will be transformed to "g" + vowel.</p>
+
+        <label for="inputText">Input:</label>
+        <input type="text" id="inputText" placeholder="Type your text here..." oninput="transformText()"
+            onkeypress="handleKeyPress(event)" />
+
+        <label for="output">Output:</label>
+        <div class="output" id="output" onclick="copyToClipboard()" title="Click to copy">Transformed text will appear
+            here...</div>
+    </div>
+
+    <div class="copied-notification" id="copiedNotification">Copied!</div>
+
+    <div style="text-align: right; padding-top: 0.5rem;">
+        <a href="https://github.com/yuan-miranda/gw3rd" target="_blank" class="github-link" title="View on GitHub"
+            style="color: #333;">GitHub</a>
+    </div>
+
+    <script>
+        function transformText() {
+            const input = document.getElementById("inputText").value;
+            const output = document.getElementById("output");
+
+            const transformed = input.replace(/[aeiouAEIOU]/g, vowel => `g${vowel}`);
+            output.textContent = transformed || "Transformed text will appear here...";
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') copyToClipboard();
+        }
+
+        async function copyToClipboard() {
+            const text = document.getElementById("output").textContent;
+            if (text && text !== "Transformed text will appear here...") {
+                await navigator.clipboard.writeText(text);
+                showCopiedNotification();
+            }
+        }
+
+        function showCopiedNotification() {
+            const notification = document.getElementById("copiedNotification");
+            notification.classList.add("show");
+            setTimeout(() => notification.classList.remove("show"), 2000);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            transformText();
+        });
+    </script>
 </body>
+
 </html>
